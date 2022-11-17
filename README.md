@@ -34,3 +34,10 @@ Login to your Atlassian Developer Account and head to your [Jira Apps](https://d
 
 </br></br>
 Add your client id and client secret to your enviroment variable or export it to your .bashrc if you are using bash, use `JIRA_CLIENT_ID` and `JIRA_SECRET` as the variable name<p>
+
+## Run the project
+You can run the project by execute `flutter run web --dart-define=JIRA_CLIENT_ID=$JIRA_CLIENT_ID --dart-define=JIRA_SECRET=$JIRA_SECRET` to your terminal or cmd
+
+## Build and deploy
+Run `flutter build web --release --dart-define=JIRA_CLIENT_ID=$JIRA_CLIENT_ID --dart-define=JIRA_SECRET=$JIRA_SECRET` and wait patiently for it to be finished<p>
+Then you can deploy `build/web` folder to your hosting
