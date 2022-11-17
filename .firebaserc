@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "jira-counter-8c2b2"
+  },
+  "targets": {
+    "jira-counter-8c2b2": {
+      "hosting": {
+        "jira-counter-8c2b2": [
+          "mystorypoint"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
