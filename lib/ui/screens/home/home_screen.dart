@@ -33,6 +33,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(taskProvider).loadOnlySubtask();
       await ref.read(projectProvider).getProjects(reset: true);
       await ref.read(taskProvider).getStatuses();
       ref.read(taskProvider).getIssues(reset: true);
