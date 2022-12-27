@@ -16,4 +16,5 @@ class Constant {
   );
   static const selectedCompany = "SELECTED_COMPANY";
   static const cloudId = "CLOUD_ID";
+  static const onlySubtask = "ONLY_SUBTASK";
 }
