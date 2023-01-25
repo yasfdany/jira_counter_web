@@ -15,6 +15,7 @@ final projectProvider =
 class ProjectProvider extends ChangeNotifier {
   final RemoteTaskService remoteTaskService = RemoteTaskService();
   final List<JiraProject?> projects = [];
+  final List<JiraProject?> filteredProjects = [];
 
   bool loading = true;
   int startAt = 0;
@@ -22,6 +23,20 @@ class ProjectProvider extends ChangeNotifier {
 
   JiraProject? selectedProject;
   SharedPreferences? prefs;
+
+  void filterProjectByTitle(String title) {
+    filteredProjects.clear();
+    for (JiraProject? project in projects) {
+      final isMatch = project?.name
+          ?.toLowerCase()
+          .trim()
+          .contains(title.toLowerCase().trim());
+      if (isMatch ?? false) {
+        filteredProjects.add(project);
+      }
+    }
+    notifyListeners();
+  }
 
   Future loadSelectedProject() async {
     prefs ??= await SharedPreferences.getInstance();
@@ -92,6 +107,7 @@ class ProjectProvider extends ChangeNotifier {
       startAt += 50;
       await getProjects();
     } else {
+      filterProjectByTitle('');
       loading = false;
       notifyListeners();
 
