@@ -6,6 +6,7 @@ import 'package:jira_counter/ui/screens/company/provider/company_provider.dart';
 import 'package:jira_counter/ui/screens/home/components/task_list.dart';
 import 'package:jira_counter/ui/screens/home/provider/project_provider.dart';
 import 'package:jira_counter/utils/extensions.dart';
+import 'package:jira_counter/utils/tools.dart';
 import 'package:widget_helper/widget_helper.dart';
 
 import '../../../config/themes.dart';
@@ -32,10 +33,11 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    Tools.onViewCreated(() async {
       await ref.read(taskProvider).loadOnlySubtask();
       await ref.read(projectProvider).getProjects(reset: true);
       await ref.read(taskProvider).getStatuses();
+      await ref.read(taskProvider).getSprints();
       ref.read(taskProvider).getIssues(reset: true);
 
       await ref.read(companyProvider).loadSelectedCompany();

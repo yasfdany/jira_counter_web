@@ -37,7 +37,7 @@ class FilterPanel extends ConsumerWidget {
                     ? () {
                         showDialog(
                           context: context,
-                          builder: ((context) => ProjectSelectorDialog()),
+                          builder: ((context) => const ProjectSelectorDialog()),
                         );
                       }
                     : null,

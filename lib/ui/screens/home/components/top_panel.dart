@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jira_counter/ui/screens/home/components/sprint_selector_dialog.dart';
 import 'package:jira_counter/ui/screens/login/login_screen.dart';
 import 'package:jira_counter/utils/extensions.dart';
 import 'package:widget_helper/widget_helper.dart';
@@ -24,6 +25,7 @@ class TopPanel extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final project = ref.watch(projectProvider).selectedProject;
     final loading = ref.watch(taskProvider).loading;
+    final sprint = ref.watch(taskProvider).selectedSprint;
     final onlySubtask = ref.watch(taskProvider).onlySubtask;
     final isWideScreen = context.isWideScreen;
 
@@ -54,7 +56,8 @@ class TopPanel extends ConsumerWidget {
                           ? () {
                               showDialog(
                                 context: context,
-                                builder: ((context) => ProjectSelectorDialog()),
+                                builder: ((context) =>
+                                    const ProjectSelectorDialog()),
                               );
                             }
                           : null,
@@ -87,7 +90,45 @@ class TopPanel extends ConsumerWidget {
                       ),
                     )
                   else
-                    Expanded(child: Container()),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: 80,
+                            child: RippleButton(
+                              onTap: !loading
+                                  ? () {
+                                      showDialog(
+                                        context: context,
+                                        builder: ((context) =>
+                                            const SprintSelectorDialog()),
+                                      );
+                                    }
+                                  : null,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              borderRadius: BorderRadius.zero,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    sprint?.name ?? "Choose Sprint",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Themes().blackBold16,
+                                  ).addMarginRight(12),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    size: 24,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   if (isWideScreen)
                     PopupMenuButton<int>(
                       icon: const Icon(Icons.settings),

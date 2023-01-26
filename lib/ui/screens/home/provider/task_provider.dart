@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jira_counter/data/network/entity/sprint_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_helper/widget_helper.dart';
 
@@ -32,6 +33,7 @@ class TaskProvider extends ChangeNotifier {
   final List<String> statuses = [];
   final List<String> selectedStatus = [];
   final List<StroyPointData> totalStoryPoint = [];
+  final List<Sprint> sprints = [];
 
   SharedPreferences? _prefs;
 
@@ -40,6 +42,7 @@ class TaskProvider extends ChangeNotifier {
   int startAt = 0;
   int total = 0;
   String? selectedAccountId;
+  Sprint? selectedSprint;
 
   late ProjectProvider projectProvider;
 
@@ -116,6 +119,76 @@ class TaskProvider extends ChangeNotifier {
       countStoryPoint();
       notifyListeners();
     }
+  }
+
+  void clearSprint() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    _prefs?.remove(Constant.jiraSprint);
+    _prefs?.remove(Constant.selectedSprint);
+    sprints.clear();
+    selectedSprint = null;
+    notifyListeners();
+  }
+
+  Future loadSprint() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    final List<String> jsonSprint =
+        _prefs?.getStringList(Constant.jiraSprint) ?? [];
+    final List<Sprint> allSprint = [];
+    for (String json in jsonSprint) {
+      allSprint.add(Sprint.fromJson(jsonDecode(json)));
+    }
+
+    sprints.clear();
+    for (Sprint sprint in allSprint) {
+      sprints.add(sprint);
+    }
+
+    final jsonString = _prefs?.getString(Constant.selectedSprint);
+    if (jsonString != null) {
+      selectedSprint = Sprint.fromJson(jsonDecode(jsonString));
+    }
+    notifyListeners();
+  }
+
+  void saveSprint() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    final List<String> jsonSprint = [];
+
+    for (Sprint sprint in sprints) {
+      jsonSprint.add(jsonEncode(sprint.toJson()));
+    }
+    _prefs?.setStringList(Constant.jiraSprint, jsonSprint);
+  }
+
+  Future getSprints() async {
+    loadSprint();
+    _prefs ??= await SharedPreferences.getInstance();
+
+    final boardData = await remoteTaskService.getBoards(
+      projectProvider.selectedProject!.key!,
+    );
+    if (boardData?.isNotEmpty ?? false) {
+      final sprintData =
+          await remoteTaskService.getSprints("${boardData?.first.id}");
+      sprints.clear();
+      sprints.addAll(sprintData?.reversed.toList() ?? []);
+      saveSprint();
+      notifyListeners();
+    }
+  }
+
+  void selectSprint(Sprint sprint) {
+    selectedSprint = sprint;
+    _prefs?.setString(
+      Constant.selectedSprint,
+      jsonEncode(selectedSprint?.toJson()),
+    );
+    notifyListeners();
+
+    getSprints();
+    clearSelectedTask();
+    getIssues(reset: true);
   }
 
   Future getStatuses({
@@ -204,8 +277,17 @@ class TaskProvider extends ChangeNotifier {
 
     if (json.isNotNull) {
       total = json?["total"];
-      for (dynamic data in json?["issues"]) {
-        issues.add(Map<String, dynamic>.from(data));
+      for (dynamic issue in json?["issues"]) {
+        final sprintNames = [];
+        for (dynamic data in issue["fields"]?["customfield_10020"] ?? []) {
+          sprintNames.add(data["name"]);
+        }
+
+        if (selectedSprint != null
+            ? sprintNames.contains(selectedSprint?.name)
+            : true) {
+          issues.add(Map<String, dynamic>.from(issue));
+        }
       }
 
       if (startAt < total) {

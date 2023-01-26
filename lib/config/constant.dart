@@ -4,8 +4,10 @@ class Constant {
   static const jiraToken = "JIRA_TOKEN";
   static const filterStatus = "FILTER_STATUS";
   static const selectedProject = "SELECTED_PROJECT";
+  static const selectedSprint = "SELECTED_SPRINT";
   static const jiraProjects = "JIRA_PROJECTS";
   static const jiraIssueStatuses = "JIRA_ISSUE_STATUSES";
+  static const jiraSprint = "JIRA_SPRINT";
   static const jiraClientId = String.fromEnvironment(
     "JIRA_CLIENT_ID",
     defaultValue: "",

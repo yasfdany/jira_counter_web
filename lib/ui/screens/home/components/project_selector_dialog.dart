@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jira_counter/ui/components/textareas/textarea.dart';
 import 'package:jira_counter/utils/extensions.dart';
+import 'package:jira_counter/utils/tools.dart';
 import 'package:widget_helper/widget_helper.dart';
 
 import '../../../../config/themes.dart';
@@ -25,11 +26,14 @@ class _ProjectSelectorDialogState extends ConsumerState<ProjectSelectorDialog> {
   @override
   void initState() {
     super.initState();
-    ref.read(projectProvider).filterProjectByTitle('');
+    Tools.onViewCreated(() {
+      ref.read(projectProvider).filterProjectByTitle('');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
     final projects = ref.watch(projectProvider).filteredProjects;
     final selectedProject = ref.watch(projectProvider).selectedProject;
     final isWideScreen = context.isWideScreen;
@@ -92,10 +96,12 @@ class _ProjectSelectorDialogState extends ConsumerState<ProjectSelectorDialog> {
                             : Colors.transparent),
                     onTap: () async {
                       ref.read(projectProvider).selectProject(project);
+                      ref.read(taskProvider).clearSprint();
+                      ref.read(taskProvider).getSprints();
                       ref.read(taskProvider).getStatuses(reset: true);
                       ref.read(taskProvider).clearSelectedTask();
                       ref.read(taskProvider).getIssues(reset: true);
-                      Navigator.pop(context);
+                      navigator.pop();
                     },
                     child: SizedBox(
                       width: double.infinity,

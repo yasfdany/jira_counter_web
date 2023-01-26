@@ -93,7 +93,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                 final encodedUrl = Uri.encodeComponent(url);
 
                                 window.open(
-                                  "https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${Constant.jiraClientId}&scope=read%3Ajira-work&redirect_uri=$encodedUrl%2Fauthenticate&state=login&response_type=code&prompt=consent",
+                                  "https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${Constant.jiraClientId}&scope=read%3Ajira-work%20read%3Asprint%3Ajira-software&redirect_uri=$encodedUrl%2Fauthenticate&state=login&response_type=code&prompt=consent",
                                   "_self",
                                 );
                               },

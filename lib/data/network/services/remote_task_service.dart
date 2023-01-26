@@ -5,7 +5,9 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jira_counter/data/network/entity/board_response.dart';
 import 'package:jira_counter/data/network/entity/company.dart';
+import 'package:jira_counter/data/network/entity/sprint_response.dart';
 import 'package:jira_counter/data/network/entity/token_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -186,6 +188,66 @@ class RemoteTaskService extends ApiInterface {
 
       if (response.statusCode == 200) {
         return companyResponseFromJson(response.body);
+      } else if (response.statusCode == 401) {
+        resetCredential();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Sprint>?> getSprints(String boardId) async {
+    loadAllCredential();
+
+    prefs ??= await SharedPreferences.getInstance();
+    token = prefs?.getString(Constant.jiraToken);
+
+    try {
+      http.Response response = await ApiClient.client.get(
+        Uri.parse(
+          "https://api.atlassian.com/ex/jira/$cloudId/rest/agile/1.0/board/$boardId/sprint",
+        ),
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        final json = sprintResponseFromJson(response.body);
+        return json.values;
+      } else if (response.statusCode == 401) {
+        resetCredential();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Board>?> getBoards(String projectKey) async {
+    loadAllCredential();
+
+    prefs ??= await SharedPreferences.getInstance();
+    token = prefs?.getString(Constant.jiraToken);
+
+    try {
+      http.Response response = await ApiClient.client.get(
+        Uri.parse(
+          "https://api.atlassian.com/ex/jira/$cloudId/rest/agile/1.0/board?projectKeyOrId=$projectKey",
+        ),
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        final json = boardResponseFromJson(response.body);
+        return json.values;
       } else if (response.statusCode == 401) {
         resetCredential();
       } else {

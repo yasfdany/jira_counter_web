@@ -1,4 +1,6 @@
+import 'package:jira_counter/data/network/entity/board_response.dart';
 import 'package:jira_counter/data/network/entity/company.dart';
+import 'package:jira_counter/data/network/entity/sprint_response.dart';
 import 'package:jira_counter/data/network/entity/token_response.dart';
 
 import 'entity/jira_project_response.dart';
@@ -24,4 +26,8 @@ abstract class ApiInterface {
   });
 
   Future<List<Company>?> getCompanies();
+
+  Future<List<Sprint>?> getSprints(String boardId);
+
+  Future<List<Board>?> getBoards(String projectKey);
 }
