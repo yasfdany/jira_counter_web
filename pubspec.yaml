@@ -7,21 +7,22 @@ environment:
   sdk: ">=2.18.0 <3.0.0"
 
 dependencies:
-  cached_network_image: ^3.2.2
-  cupertino_icons: ^1.0.2
+  cached_network_image: ^3.2.3
+  cupertino_icons: ^1.0.5
   ensure_visible_when_focused: ^1.1.1
+  firebase_core: ^2.13.0
   flutter:
     sdk: flutter
-  flutter_riverpod: ^2.1.1
-  flutter_svg: ^1.1.6
-  go_router: ^5.1.1
-  google_fonts: ^3.0.1
-  http: ^0.13.5
+  flutter_riverpod: ^2.3.6
+  flutter_svg: ^2.0.6
+  go_router: ^7.0.2
+  google_fonts: ^4.0.4
+  http: ^0.13.6
   multi_value_listenable_builder: ^0.0.2
   oktoast: ^3.3.1
-  riverpod: ^2.1.1
-  shared_preferences: ^2.0.15
-  url_launcher: ^6.1.6
+  riverpod: ^2.3.6
+  shared_preferences: ^2.1.1
+  url_launcher: ^6.1.11
   url_strategy: ^0.2.0
   widget_helper:
     path: ./packages/widget_helper/
@@ -37,4 +38,3 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-  

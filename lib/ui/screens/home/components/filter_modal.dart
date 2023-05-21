@@ -38,9 +38,9 @@ class FilterModal extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     FlatCard(
                       width: 80,
                       height: 5,

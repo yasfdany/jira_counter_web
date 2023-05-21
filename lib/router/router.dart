@@ -18,7 +18,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AuthenticationScreen.routeName,
         builder: (BuildContext context, GoRouterState state) {
-          Map params = state.queryParams;
+          Map params = state.queryParameters;
 
           return AuthenticationScreen(
             code: params["code"],

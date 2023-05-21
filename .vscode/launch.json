@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Jira Counter",
+            "name": "Launch Production",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
@@ -10,6 +10,12 @@
                 "--dart-define=JIRA_CLIENT_ID=$JIRA_CLIENT_ID",
                 "--dart-define=JIRA_SECRET=$JIRA_SECRET",
             ]
+        },
+        {
+            "name": "Launch Dev",
+            "request": "launch",
+            "type": "node-terminal",
+            "command": "flutter run --dart-define=JIRA_CLIENT_ID=$JIRA_CLIENT_ID_DEV --dart-define=JIRA_SECRET=$JIRA_SECRET_DEV --web-hostname=localhost --web-port=34717",
         },
     ]
 }
